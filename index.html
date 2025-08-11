@@ -20,6 +20,61 @@
             background-color: rgba(0,0,0,0.8);
         }
         
+        /* 解码馆图片展示样式 */
+        .hall-image-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .hall-image {
+            max-width: 80vw;
+            max-height: 70vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .hall-image-nav {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .hall-nav-btn {
+            background: #8B4513;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .hall-nav-btn:hover {
+            background: #A0522D;
+        }
+        
+        .hall-nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .hall-image-counter {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #8B4513;
+            font-weight: bold;
+        }
+        
         .dragon-modal-content {
             background-color: #fefefe;
             margin: 5% auto;
@@ -104,6 +159,51 @@
         <div id="dragonTitle" class="dragon-title"></div>
         <div id="dragonDescription" class="dragon-description"></div>
         <div id="dragonImages" class="dragon-images"></div>
+    </div>
+</div>
+
+<!-- 解码馆图片展示 -->
+<div id="hallImageDisplay" class="hall-image-display" style="display: none;">
+    <img id="hallCurrentImage" class="hall-image" src="" alt="解码馆图片">
+    
+    <!-- 龙身体部位热点 -->
+    <div class="dragon-hotspots">
+        <!-- 角 - 鹿 -->
+        <div class="dragon-hotspot" data-part="horn" style="position: absolute; top: 15%; left: 25%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">角</div>
+        
+        <!-- 前额 - 骆驼 -->
+        <div class="dragon-hotspot" data-part="forehead" style="position: absolute; top: 20%; left: 40%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">前额</div>
+        
+        <!-- 眼 - 老虎 -->
+        <div class="dragon-hotspot" data-part="eye" style="position: absolute; top: 25%; left: 55%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">眼</div>
+        
+        <!-- 尾 - 泥鳅 -->
+        <div class="dragon-hotspot" data-part="tail" style="position: absolute; top: 45%; left: 70%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">尾</div>
+        
+        <!-- 爪 - 鹰 -->
+        <div class="dragon-hotspot" data-part="claw" style="position: absolute; top: 60%; left: 60%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">爪</div>
+        
+        <!-- 鳞 - 金鱼 -->
+        <div class="dragon-hotspot" data-part="scale" style="position: absolute; top: 50%; left: 45%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">鳞</div>
+        
+        <!-- 身 - 蛇 -->
+        <div class="dragon-hotspot" data-part="body" style="position: absolute; top: 35%; left: 15%; width: 60px; height: 60px; cursor: pointer; background: rgba(255, 255, 255, 0.3); border: 2px solid #8B4513; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #8B4513; font-weight: bold;">身</div>
+    </div>
+    
+    <div class="hall-image-nav">
+        <button id="closeHallBtn" class="hall-nav-btn">关闭</button>
+    </div>
+</div>
+
+<!-- 动物信息展示模态框 -->
+<div id="animalModal" class="dragon-modal" style="display: none;">
+    <div class="dragon-modal-content" style="max-width: 600px;">
+        <span class="close" onclick="closeAnimalModal()">&times;</span>
+        <div id="animalTitle" class="dragon-title"></div>
+        <div id="animalDescription" class="dragon-description"></div>
+        <div id="animalImage" style="text-align: center; margin: 20px 0;">
+            <img id="animalImg" src="" alt="动物图片" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        </div>
     </div>
 </div>
 
@@ -327,6 +427,59 @@
         }
     }
 
+    // 解码馆图片数据
+    const hallImages = [
+        "images/3.Hall/龙.png"
+    ];
+    
+    // 龙身体部位对应的动物数据
+    const dragonParts = {
+        "horn": {
+            name: "角",
+            animal: "鹿",
+            image: "images/3.Hall/鹿.png",
+            description: "龙的角来源于鹿的鹿角"
+        },
+        "forehead": {
+            name: "前额",
+            animal: "骆驼",
+            image: "images/3.Hall/骆驼.png",
+            description: "龙的前额来源于骆驼的额头"
+        },
+        "eye": {
+            name: "眼",
+            animal: "老虎",
+            image: "images/3.Hall/老虎.png",
+            description: "龙的眼睛来源于老虎的眼睛"
+        },
+        "tail": {
+            name: "尾",
+            animal: "泥鳅",
+            image: "images/3.Hall/泥鳅.png",
+            description: "龙的尾巴来源于泥鳅的尾巴"
+        },
+        "claw": {
+            name: "爪",
+            animal: "鹰",
+            image: "images/3.Hall/鹰.png",
+            description: "龙的爪子来源于鹰的爪子"
+        },
+        "scale": {
+            name: "鳞",
+            animal: "金鱼",
+            image: "images/3.Hall/金鱼.png",
+            description: "龙的鳞片来源于金鱼的鳞片"
+        },
+        "body": {
+            name: "身",
+            animal: "蛇",
+            image: "images/3.Hall/蛇.png",
+            description: "龙的身体来源于蛇的身体"
+        }
+    };
+    
+    let currentHallImageIndex = 0;
+    
     // 初始化 Pannellum Viewer
     const viewer = pannellum.viewer('panorama', {
         "default": {
@@ -377,10 +530,70 @@
                     });
                 }, 6000);
             }, 500);
-            
-
+        } else if (sceneId === 'hall') {
+            // 进入解码馆时自动显示图片1
+            setTimeout(function() {
+                showHallImage(0);
+            }, 1000);
         }
     });
+    
+    // 显示解码馆图片
+    function showHallImage(index) {
+        if (index >= 0 && index < hallImages.length) {
+            currentHallImageIndex = index;
+            const imageDisplay = document.getElementById('hallImageDisplay');
+            const currentImage = document.getElementById('hallCurrentImage');
+            
+            currentImage.src = hallImages[index];
+            imageDisplay.style.display = 'block';
+            
+            // 绑定龙身体部位热点事件
+            bindDragonHotspots();
+        }
+    }
+    
+    // 绑定龙身体部位热点事件
+    function bindDragonHotspots() {
+        const hotspots = document.querySelectorAll('.dragon-hotspot');
+        hotspots.forEach(hotspot => {
+            hotspot.onclick = function() {
+                const part = this.getAttribute('data-part');
+                showAnimalInfo(part);
+            };
+        });
+    }
+    
+    // 显示动物信息
+    function showAnimalInfo(partKey) {
+        const part = dragonParts[partKey];
+        if (!part) return;
+        
+        const modal = document.getElementById('animalModal');
+        const title = document.getElementById('animalTitle');
+        const description = document.getElementById('animalDescription');
+        const animalImg = document.getElementById('animalImg');
+        
+        title.textContent = `${part.name} (${part.animal})`;
+        description.textContent = part.description;
+        animalImg.src = part.image;
+        animalImg.alt = part.animal;
+        
+        modal.style.display = 'block';
+    }
+    
+    // 关闭动物信息模态框
+    function closeAnimalModal() {
+        document.getElementById('animalModal').style.display = 'none';
+    }
+    
+    // 关闭解码馆图片显示
+    function closeHallImage() {
+        document.getElementById('hallImageDisplay').style.display = 'none';
+    }
+    
+    // 绑定按钮事件
+    document.getElementById('closeHallBtn').onclick = closeHallImage;
 </script>
 </body>
 </html>
