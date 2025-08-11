@@ -190,8 +190,12 @@
         <div class="dragon-hotspot" data-part="body" style="position: absolute; top: 43%; left: 7%; width: 100px; height: 100px; cursor: pointer; background: transparent; border: none; display: flex; align-items: center; justify-content: center;"></div>
     </div>
     
+    <!-- 中间集合区域 -->
+    <div id="centerCollection" class="center-collection" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; cursor: pointer; background: transparent; border: none; display: none; align-items: center; justify-content: center; z-index: 1000;"></div>
+    
     <div class="hall-image-nav">
         <button id="closeHallBtn" class="hall-nav-btn">关闭</button>
+        <button id="resetBtn" class="hall-nav-btn" style="background: #D2691E;">重置</button>
     </div>
 </div>
 
@@ -203,6 +207,20 @@
         <div id="animalDescription" class="dragon-description"></div>
         <div id="animalImage" style="text-align: center; margin: 20px 0;">
             <img id="animalImg" src="" alt="动物图片" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        </div>
+    </div>
+</div>
+
+<!-- 集合文字展示模态框 -->
+<div id="collectionModal" class="dragon-modal" style="display: none;">
+    <div class="dragon-modal-content" style="max-width: 800px;">
+        <span class="close" onclick="closeCollectionModal()">&times;</span>
+        <div class="dragon-title" style="color: #8B4513; font-size: 28px; margin-bottom: 20px;">龙，乃万兽之首</div>
+        <div class="dragon-description" style="font-size: 18px; line-height: 1.6; text-align: justify; color: #333;">
+            人们为龙选用的不同动物的部位，是摄取了最精华、最完美的部位，集如此多优势于一身的造型自然是万物之灵，同时也寄托了人们美好的愿望。
+        </div>
+        <div id="collectionImages" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px;">
+            <!-- 集合的动物图片将在这里显示 -->
         </div>
     </div>
 </div>
@@ -484,6 +502,9 @@
         }
     };
     
+    // 记录已查看的部位
+    let viewedParts = new Set();
+    
     let currentHallImageIndex = 0;
     
     // 初始化 Pannellum Viewer
@@ -605,6 +626,302 @@
         modal.style.display = 'block';
     }
     
+    // 检查是否所有部位都已查看
+    function checkAllPartsViewed() {
+        const allParts = Object.keys(dragonParts);
+        const viewedCount = viewedParts.size;
+        
+        if (viewedCount === allParts.length) {
+            // 延迟执行集合动画
+            setTimeout(() => {
+                animateCollectionToCenter();
+            }, 1000);
+        }
+    }
+    
+    // 动画集合到中部
+    function animateCollectionToCenter() {
+        const hotspots = document.querySelectorAll('.dragon-hotspot');
+        const centerCollection = document.getElementById('centerCollection');
+        
+        // 显示中间集合区域
+        centerCollection.style.display = 'flex';
+        centerCollection.innerHTML = '<div style="background: rgba(255, 255, 255, 0.8); border: 2px dashed #8B4513; border-radius: 50%; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #8B4513; font-weight: bold;">集合中...</div>';
+        
+        // 创建集合容器
+        const collectionContainer = document.createElement('div');
+        collectionContainer.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        document.getElementById('hallImageDisplay').appendChild(collectionContainer);
+        
+        // 为每个热点添加动画类
+        hotspots.forEach((hotspot, index) => {
+            const smallImg = hotspot.querySelector('img');
+            if (smallImg) {
+                // 创建新的图片元素用于动画
+                const animatedImg = document.createElement('div');
+                animatedImg.style.cssText = `
+                    position: absolute;
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    border: 3px solid #8B4513;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    z-index: ${1001 + index};
+                `;
+                
+                const imgClone = smallImg.cloneNode(true);
+                imgClone.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                `;
+                animatedImg.appendChild(imgClone);
+                
+                // 设置初始位置（分散在周围）
+                const angle = (index / hotspots.length) * 2 * Math.PI;
+                const radius = 150;
+                const startX = Math.cos(angle) * radius;
+                const startY = Math.sin(angle) * radius;
+                
+                animatedImg.style.transform = `translate(${startX}px, ${startY}px) scale(0.8)`;
+                collectionContainer.appendChild(animatedImg);
+                
+                // 延迟动画，让每个图片依次移动
+                setTimeout(() => {
+                    // 计算最终位置（围绕中心排列）
+                    const finalAngle = (index / hotspots.length) * 2 * Math.PI;
+                    const finalRadius = 60;
+                    const finalX = Math.cos(finalAngle) * finalRadius;
+                    const finalY = Math.sin(finalAngle) * finalRadius;
+                    
+                    animatedImg.style.transform = `translate(${finalX}px, ${finalY}px) scale(0.6) rotate(360deg)`;
+                    animatedImg.style.border = '2px solid #8B4513';
+                    
+                }, index * 400); // 每个图片间隔400ms移动
+            }
+        });
+        
+        // 所有图片移动完成后显示文案
+        setTimeout(() => {
+            showCollectionText();
+        }, hotspots.length * 400 + 2500);
+    }
+    
+    // 显示集合文案
+    function showCollectionText() {
+        const centerCollection = document.getElementById('centerCollection');
+        
+        // 创建文案容器
+        const textContainer = document.createElement('div');
+        textContainer.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 220, 0.95));
+            border: 3px solid #8B4513;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            z-index: 1002;
+            max-width: 650px;
+            animation: fadeInScale 1.5s ease-out;
+            backdrop-filter: blur(10px);
+        `;
+        
+        // 添加装饰性边框
+        const borderDecoration = document.createElement('div');
+        borderDecoration.style.cssText = `
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #8B4513, #D2691E, #8B4513);
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderGlow 2s ease-in-out infinite alternate;
+        `;
+        textContainer.appendChild(borderDecoration);
+        
+        // 添加标题
+        const title = document.createElement('div');
+        title.textContent = '龙，乃万兽之首';
+        title.style.cssText = `
+            font-size: 32px;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+            position: relative;
+        `;
+        
+        // 添加描述
+        const description = document.createElement('div');
+        description.textContent = '人们为龙选用的不同动物的部位，是摄取了最精华、最完美的部位，集如此多优势于一身的造型自然是万物之灵，同时也寄托了人们美好的愿望。';
+        description.style.cssText = `
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+            margin-bottom: 30px;
+            animation: textFadeIn 1s ease-out 0.5s both;
+        `;
+        
+        // 添加点击查看详情按钮
+        const detailBtn = document.createElement('button');
+        detailBtn.textContent = '点击查看详情';
+        detailBtn.style.cssText = `
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+            animation: buttonPulse 2s ease-in-out infinite;
+        `;
+        
+        detailBtn.onmouseover = function() {
+            this.style.background = 'linear-gradient(135deg, #A0522D, #CD853F)';
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 6px 20px rgba(139, 69, 19, 0.4)';
+        };
+        
+        detailBtn.onmouseout = function() {
+            this.style.background = 'linear-gradient(135deg, #8B4513, #A0522D)';
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 15px rgba(139, 69, 19, 0.3)';
+        };
+        
+        detailBtn.onclick = function() {
+            showCollectionModal();
+            // 移除文案容器
+            textContainer.remove();
+        };
+        
+        // 组装文案容器
+        textContainer.appendChild(title);
+        textContainer.appendChild(description);
+        textContainer.appendChild(detailBtn);
+        
+        // 添加到页面
+        document.getElementById('hallImageDisplay').appendChild(textContainer);
+        
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInScale {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                }
+            }
+            
+            @keyframes borderGlow {
+                from {
+                    opacity: 0.7;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes titleGlow {
+                from {
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                }
+                to {
+                    text-shadow: 2px 2px 8px rgba(139, 69, 19, 0.3);
+                }
+            }
+            
+            @keyframes textFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes buttonPulse {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // 显示集合模态框
+    function showCollectionModal() {
+        const modal = document.getElementById('collectionModal');
+        const collectionImages = document.getElementById('collectionImages');
+        
+        // 清空并添加所有动物图片
+        collectionImages.innerHTML = '';
+        Object.values(dragonParts).forEach(part => {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.textAlign = 'center';
+            
+            const img = document.createElement('img');
+            img.src = part.image;
+            img.alt = part.animal;
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '50%';
+            img.style.border = '2px solid #8B4513';
+            img.style.marginBottom = '5px';
+            
+            const label = document.createElement('div');
+            label.textContent = part.animal;
+            label.style.fontSize = '12px';
+            label.style.color = '#8B4513';
+            label.style.fontWeight = 'bold';
+            
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(label);
+            collectionImages.appendChild(imgContainer);
+        });
+        
+        modal.style.display = 'block';
+    }
+    
+    // 关闭集合模态框
+    function closeCollectionModal() {
+        document.getElementById('collectionModal').style.display = 'none';
+    }
+    
     // 关闭动物信息模态框并显示小图片
     function closeAnimalModal() {
         const modal = document.getElementById('animalModal');
@@ -612,6 +929,9 @@
         const part = dragonParts[partKey];
         
         if (part) {
+            // 记录已查看的部位
+            viewedParts.add(partKey);
+            
             // 找到对应的热点元素
             const hotspot = document.querySelector(`[data-part="${partKey}"]`);
             if (hotspot) {
@@ -643,6 +963,9 @@
                     showAnimalInfo(partKey);
                 };
             }
+            
+            // 检查是否所有部位都已查看
+            checkAllPartsViewed();
         }
         
         modal.style.display = 'none';
@@ -655,6 +978,66 @@
     
     // 绑定按钮事件
     document.getElementById('closeHallBtn').onclick = closeHallImage;
+    document.getElementById('resetBtn').onclick = resetHallExperience;
+    
+    // 重置解码馆体验
+    function resetHallExperience() {
+        // 清空已查看的部位记录
+        viewedParts.clear();
+        
+        // 移除所有动画元素
+        const animatedElements = document.querySelectorAll('[style*="z-index: 1001"], [style*="z-index: 1002"]');
+        animatedElements.forEach(element => element.remove());
+        
+        // 重置热点状态
+        const hotspots = document.querySelectorAll('.dragon-hotspot');
+        hotspots.forEach(hotspot => {
+            hotspot.innerHTML = '';
+            hotspot.style.background = 'transparent';
+            hotspot.style.border = 'none';
+            hotspot.style.display = 'flex';
+            hotspot.style.alignItems = 'center';
+            hotspot.style.justifyContent = 'center';
+            hotspot.style.width = '100px';
+            hotspot.style.height = '100px';
+            hotspot.style.position = 'absolute';
+            hotspot.style.zIndex = 'auto';
+            hotspot.style.transition = 'none';
+            hotspot.style.transform = 'none';
+            
+            // 重新绑定点击事件
+            const partKey = hotspot.getAttribute('data-part');
+            hotspot.onclick = function() {
+                showAnimalInfo(partKey);
+            };
+        });
+        
+        // 隐藏中间集合区域
+        const centerCollection = document.getElementById('centerCollection');
+        centerCollection.style.display = 'none';
+        
+        // 显示重置成功提示
+        const resetMessage = document.createElement('div');
+        resetMessage.textContent = '已重置，请重新点击各个部位';
+        resetMessage.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(139, 69, 19, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 10000;
+            font-size: 14px;
+        `;
+        document.body.appendChild(resetMessage);
+        
+        // 3秒后移除提示
+        setTimeout(() => {
+            resetMessage.remove();
+        }, 3000);
+    }
 </script>
 </body>
 </html>
