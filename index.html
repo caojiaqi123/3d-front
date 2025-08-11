@@ -12,7 +12,7 @@
         .dragon-modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 99999 !important;
             left: 0;
             top: 0;
             width: 100%;
@@ -29,6 +29,8 @@
             max-width: 800px;
             border-radius: 10px;
             position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 99999 !important;
         }
         
         .close {
@@ -74,6 +76,22 @@
             color: #666;
             margin-bottom: 20px;
         }
+        
+        /* 确保在全屏模式下模态框也能显示 */
+        .pannellum-container:fullscreen .dragon-modal,
+        .pannellum-container:-webkit-full-screen .dragon-modal,
+        .pannellum-container:-moz-full-screen .dragon-modal {
+            z-index: 99999 !important;
+        }
+        
+        /* 强制模态框显示在所有元素之上 */
+        .dragon-modal {
+            pointer-events: auto !important;
+        }
+        
+
+        
+
     </style>
 </head>
 <body>
@@ -161,6 +179,11 @@
         "museum": {
             "title": "龙博物馆",
             "panorama": "images/2.museum/场景背景参考1.png",
+            "initialViewParameters": {
+                "pitch": -25,
+                "yaw": 0,
+                "fov": 140
+            },
             "hotSpots": [
                 {
                     "pitch": 0,
@@ -224,6 +247,7 @@
                     "text": "明清时代的龙",
                     "clickHandlerFunc": function() { showDragonArtifact('mingqing'); }
                 }
+
             ]
         },
         "hall": {
@@ -262,8 +286,32 @@
             imagesContainer.appendChild(img);
         });
         
-        // 显示模态框
-        document.getElementById('dragonModal').style.display = 'block';
+        // 强制显示模态框
+        const modal = document.getElementById('dragonModal');
+        
+        // 多重方法确保显示
+        modal.style.display = 'block';
+        modal.style.zIndex = '99999';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        
+        // 确保模态框在最顶层
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.offsetHeight; // 触发重排
+            modal.style.display = 'block';
+            
+            // 再次强制设置z-index
+            modal.style.zIndex = '99999';
+            
+            // 检查是否在全屏模式
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+                modal.style.zIndex = '999999';
+            }
+        }, 10);
     }
 
     // 关闭模态框
@@ -280,13 +328,58 @@
     }
 
     // 初始化 Pannellum Viewer
-    pannellum.viewer('panorama', {
+    const viewer = pannellum.viewer('panorama', {
         "default": {
             "firstScene": "entrance", // 初始场景
             "author": "你的名字",
             "sceneFadeDuration": 1000
         },
         "scenes": scenes
+    });
+    
+    // 监听场景切换事件，为博物馆场景添加进入动画
+    viewer.on('scenechange', function(sceneId) {
+        if (sceneId === 'museum') {
+            // 延迟执行进入动画，确保场景加载完成
+            setTimeout(function() {
+                // 从远到近的进入效果：设置较远的起始视角
+                viewer.setPitch(-25);
+                viewer.setYaw(0);
+                viewer.setHfov(140);
+                
+                // 第一阶段：缓慢推进
+                setTimeout(function() {
+                    viewer.animate({
+                        pitch: -20,
+                        yaw: 0,
+                        hfov: 120,
+                        speed: '0.3rpm'
+                    });
+                }, 800);
+                
+                // 第二阶段：继续推进
+                setTimeout(function() {
+                    viewer.animate({
+                        pitch: -15,
+                        yaw: 0,
+                        hfov: 100,
+                        speed: '0.4rpm'
+                    });
+                }, 3000);
+                
+                // 第三阶段：最终到达目标位置
+                setTimeout(function() {
+                    viewer.animate({
+                        pitch: -5,
+                        yaw: 0,
+                        hfov: 90,
+                        speed: '0.2rpm'
+                    });
+                }, 6000);
+            }, 500);
+            
+
+        }
     });
 </script>
 </body>
