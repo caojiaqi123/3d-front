@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>虚拟博物馆</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css"/>
+    <style>
+        html, body { margin: 0; height: 100%; }
+        #panorama { width: 100%; height: 100%; }
+        
+        /* 龙文物展示模态框样式 */
+        .dragon-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .dragon-modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .dragon-images {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .dragon-image {
+            max-width: 45%;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .dragon-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .dragon-description {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="panorama"></div>
+
+<!-- 龙文物展示模态框 -->
+<div id="dragonModal" class="dragon-modal">
+    <div class="dragon-modal-content">
+        <span class="close">&times;</span>
+        <div id="dragonTitle" class="dragon-title"></div>
+        <div id="dragonDescription" class="dragon-description"></div>
+        <div id="dragonImages" class="dragon-images"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
+<script>
+    // 龙文物数据
+    const dragonArtifacts = {
+        "yuzhulong": {
+            title: "玉猪龙",
+            description: "新石器时代红山文化玉器，是中国最早的龙形玉器之一",
+            images: [
+                "images/2.museum/dragons/玉猪龙1.jpg",
+                "images/2.museum/dragons/玉猪龙2.jpg"
+            ]
+        },
+        "handai": {
+            title: "汉代瓦当",
+            description: "汉代建筑构件，龙纹瓦当展现了汉代龙文化的特点",
+            images: [
+                "images/2.museum/dragons/瓦当汉代1.jpg",
+                "images/2.museum/dragons/瓦当汉代2.jpg"
+            ]
+        },
+        "suidai": {
+            title: "隋代赵州桥石栏板",
+            description: "隋代建筑艺术，石栏板上的龙纹雕刻精美绝伦",
+            images: [
+                "images/2.museum/dragons/隋代赵州桥石栏板1.jpg",
+                "images/2.museum/dragons/隋代赵州桥石栏板2.jpg"
+            ]
+        },
+        "tangdai": {
+            title: "云龙纹葵花镜",
+            description: "唐代铜镜，云龙纹饰体现了唐代龙文化的繁荣",
+            images: [
+                "images/2.museum/dragons/云龙纹葵花镜1.jpg",
+                "images/2.museum/dragons/云龙纹葵花镜2.jpg"
+            ]
+        },
+        "yuandai": {
+            title: "元代龙纹高足杯",
+            description: "元代瓷器，龙纹装饰展现了元代龙文化的特色",
+            images: [
+                "images/2.museum/dragons/元代龙纹高足杯1.jpg",
+                "images/2.museum/dragons/元代龙纹高足杯2.jpg"
+            ]
+        },
+        "mingqing": {
+            title: "明清时代的龙",
+            description: "明清时期龙文化达到顶峰，龙纹装饰更加精细华丽",
+            images: [
+                "images/2.museum/dragons/明清时代的龙1.jpg",
+                "images/2.museum/dragons/明清时代的龙2.jpg"
+            ]
+        }
+    };
+
+    // 定义所有场景
+    const scenes = {
+        "entrance": {
+            "title": "龙国",
+            "panorama": "images/1.country/DragonCountry.png",
+            "hotSpots": [
+                {
+                    "pitch": -25,      // 垂直角度
+                    "yaw": 20,       // 水平角度
+                    "type": "scene", // 点击切换场景
+                    "text": "进入龙国博物馆",
+                    "sceneId": "museum"
+                }
+            ]
+        },
+        "museum": {
+            "title": "龙博物馆",
+            "panorama": "images/2.museum/场景背景参考1.png",
+            "hotSpots": [
+                {
+                    "pitch": 0,
+                    "yaw": 180,
+                    "type": "scene",
+                    "text": "返回龙国",
+                    "sceneId": "entrance"
+                },
+                {
+                    "pitch": -10,
+                    "yaw": 0,
+                    "type": "scene",
+                    "text": "进入龙解码馆",
+                    "sceneId": "hall"
+                },
+                // 玉猪龙标签
+                {
+                    "pitch": -15,
+                    "yaw": 45,
+                    "type": "info",
+                    "text": "玉猪龙",
+                    "clickHandlerFunc": function() { showDragonArtifact('yuzhulong'); }
+                },
+                // 汉代瓦当标签
+                {
+                    "pitch": -10,
+                    "yaw": 90,
+                    "type": "info",
+                    "text": "汉代瓦当",
+                    "clickHandlerFunc": function() { showDragonArtifact('handai'); }
+                },
+                // 隋代赵州桥石栏板标签
+                {
+                    "pitch": -5,
+                    "yaw": 135,
+                    "type": "info",
+                    "text": "隋代赵州桥石栏板",
+                    "clickHandlerFunc": function() { showDragonArtifact('suidai'); }
+                },
+                // 云龙纹葵花镜标签
+                {
+                    "pitch": -12,
+                    "yaw": -45,
+                    "type": "info",
+                    "text": "云龙纹葵花镜",
+                    "clickHandlerFunc": function() { showDragonArtifact('tangdai'); }
+                },
+                // 元代龙纹高足杯标签
+                {
+                    "pitch": -8,
+                    "yaw": -90,
+                    "type": "info",
+                    "text": "元代龙纹高足杯",
+                    "clickHandlerFunc": function() { showDragonArtifact('yuandai'); }
+                },
+                // 明清时代的龙标签
+                {
+                    "pitch": -18,
+                    "yaw": -135,
+                    "type": "info",
+                    "text": "明清时代的龙",
+                    "clickHandlerFunc": function() { showDragonArtifact('mingqing'); }
+                }
+            ]
+        },
+        "hall": {
+            "title": "龙解码馆",
+            "panorama": "images/3.Hall/场景背景参考1.jpg",
+            "hotSpots": [
+                {
+                    "pitch": 0,
+                    "yaw": 150,
+                    "type": "scene",
+                    "text": "返回龙博物馆",
+                    "sceneId": "museum"
+                }
+            ]
+        }
+    };
+
+    // 显示龙文物信息的函数
+    function showDragonArtifact(artifactKey) {
+        const artifact = dragonArtifacts[artifactKey];
+        if (!artifact) return;
+        
+        // 更新模态框内容
+        document.getElementById('dragonTitle').textContent = artifact.title;
+        document.getElementById('dragonDescription').textContent = artifact.description;
+        
+        // 清空并添加图片
+        const imagesContainer = document.getElementById('dragonImages');
+        imagesContainer.innerHTML = '';
+        
+        artifact.images.forEach(imagePath => {
+            const img = document.createElement('img');
+            img.src = imagePath;
+            img.alt = artifact.title;
+            img.className = 'dragon-image';
+            imagesContainer.appendChild(img);
+        });
+        
+        // 显示模态框
+        document.getElementById('dragonModal').style.display = 'block';
+    }
+
+    // 关闭模态框
+    document.querySelector('.close').onclick = function() {
+        document.getElementById('dragonModal').style.display = 'none';
+    }
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+        const modal = document.getElementById('dragonModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // 初始化 Pannellum Viewer
+    pannellum.viewer('panorama', {
+        "default": {
+            "firstScene": "entrance", // 初始场景
+            "author": "你的名字",
+            "sceneFadeDuration": 1000
+        },
+        "scenes": scenes
+    });
+</script>
+</body>
+</html>
