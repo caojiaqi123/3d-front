@@ -12,12 +12,24 @@
         .dragon-modal {
             display: none;
             position: fixed;
-            z-index: 99999 !important;
+            z-index: 2147483647 !important;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.8);
+        }
+        
+        /* 全屏模式下的模态框样式 */
+        :fullscreen .dragon-modal,
+        :-webkit-full-screen .dragon-modal,
+        :-moz-full-screen .dragon-modal {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
         }
         
         /* 解码馆图片展示样式 */
@@ -85,7 +97,7 @@
             border-radius: 10px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 99999 !important;
+            z-index: 2147483647 !important;
         }
         
         .close {
@@ -496,9 +508,14 @@
         // 强制显示模态框
         const modal = document.getElementById('dragonModal');
         
+        // 确保模态框在body的最顶层
+        if (modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        
         // 多重方法确保显示
         modal.style.display = 'block';
-        modal.style.zIndex = '99999';
+        modal.style.zIndex = '2147483647';
         modal.style.position = 'fixed';
         modal.style.top = '0';
         modal.style.left = '0';
@@ -512,13 +529,27 @@
             modal.style.display = 'block';
             
             // 再次强制设置z-index
-            modal.style.zIndex = '99999';
+            modal.style.zIndex = '2147483647';
             
             // 检查是否在全屏模式
             if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
-                modal.style.zIndex = '999999';
+                modal.style.zIndex = '2147483647';
             }
         }, 10);
+        
+        // 添加调试信息
+        console.log('显示文物:', artifactKey);
+        console.log('模态框z-index:', modal.style.zIndex);
+        console.log('全屏模式:', document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+        
+        // 强制刷新模态框显示
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.offsetHeight; // 触发重排
+            modal.style.display = 'block';
+            modal.style.zIndex = '2147483647';
+            console.log('强制刷新后z-index:', modal.style.zIndex);
+        }, 50);
     }
     
     // 显示缩略图函数
