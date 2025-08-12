@@ -315,10 +315,33 @@
             right: 10%;
             width: 200px;
             height: 250px;
-            z-index: 1000;
+            z-index: 2147483647 !important;
             animation: museumYuzhulongFloat 3s ease-in-out infinite;
             transition: all 0.3s ease;
             cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        /* 全屏模式下的玉猪龙图片样式 */
+        :fullscreen .museum-yuzhulong,
+        :-webkit-full-screen .museum-yuzhulong,
+        :-moz-full-screen .museum-yuzhulong {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            top: 20% !important;
+            right: 10% !important;
+            pointer-events: auto !important;
+        }
+        
+        /* 强制显示在全屏容器之上 */
+        .pannellum-container:fullscreen .museum-yuzhulong,
+        .pannellum-container:-webkit-full-screen .museum-yuzhulong,
+        .pannellum-container:-moz-full-screen .museum-yuzhulong {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            top: 20% !important;
+            right: 10% !important;
+            pointer-events: auto !important;
         }
         
         .museum-yuzhulong:hover {
@@ -892,6 +915,16 @@
             const museumYuzhulong = document.getElementById('museumYuzhulong');
             museumYuzhulong.style.display = 'block';
             
+            // 确保在全屏模式下也能显示
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+            if (isFullscreen) {
+                museumYuzhulong.style.zIndex = '2147483647';
+                museumYuzhulong.style.position = 'fixed';
+                museumYuzhulong.style.top = '20%';
+                museumYuzhulong.style.right = '10%';
+                museumYuzhulong.style.pointerEvents = 'auto';
+            }
+            
             // 延迟执行进入动画，确保场景加载完成
             setTimeout(function() {
                 // 从远到近的进入效果：设置较远的起始视角
@@ -930,6 +963,10 @@
                 }, 6000);
             }, 500);
         } else if (sceneId === 'hall') {
+            // 进入解码馆时隐藏玉猪龙图片
+            const museumYuzhulong = document.getElementById('museumYuzhulong');
+            museumYuzhulong.style.display = 'none';
+            
             // 进入解码馆时自动显示图片1
             setTimeout(function() {
                 showHallImage(0);
@@ -1454,6 +1491,57 @@
     document.getElementById('resetBtn').onclick = resetHallExperience;
     document.getElementById('closeThumbnailBtn').onclick = closeThumbnail;
     document.getElementById('closeYuzhulongBtn').onclick = closeYuzhulongImage;
+    
+    // 监听全屏状态变化
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    
+    // 定期检查玉猪龙图片是否可见（在全屏模式下）
+    setInterval(function() {
+        const museumYuzhulong = document.getElementById('museumYuzhulong');
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        const currentScene = viewer.getScene();
+        
+        // 只在博物馆场景且全屏模式下显示玉猪龙图片
+        if (isFullscreen && currentScene === 'museum' && museumYuzhulong.style.display !== 'none') {
+            // 确保在全屏模式下可见
+            museumYuzhulong.style.zIndex = '2147483647';
+            museumYuzhulong.style.position = 'fixed';
+            museumYuzhulong.style.top = '20%';
+            museumYuzhulong.style.right = '10%';
+            museumYuzhulong.style.pointerEvents = 'auto';
+        }
+    }, 1000); // 每秒检查一次
+    
+    // 处理全屏状态变化
+    function handleFullscreenChange() {
+        const museumYuzhulong = document.getElementById('museumYuzhulong');
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        const currentScene = viewer.getScene();
+        
+        // 只在博物馆场景且全屏模式下显示玉猪龙图片
+        if (isFullscreen && currentScene === 'museum' && museumYuzhulong.style.display !== 'none') {
+            // 全屏时确保玉猪龙图片可见
+            museumYuzhulong.style.zIndex = '2147483647';
+            museumYuzhulong.style.position = 'fixed';
+            museumYuzhulong.style.top = '20%';
+            museumYuzhulong.style.right = '10%';
+            museumYuzhulong.style.pointerEvents = 'auto';
+            
+            // 强制刷新显示
+            setTimeout(() => {
+                museumYuzhulong.style.display = 'none';
+                museumYuzhulong.offsetHeight; // 触发重排
+                museumYuzhulong.style.display = 'block';
+                museumYuzhulong.style.zIndex = '2147483647';
+                museumYuzhulong.style.position = 'fixed';
+                museumYuzhulong.style.top = '20%';
+                museumYuzhulong.style.right = '10%';
+                museumYuzhulong.style.pointerEvents = 'auto';
+            }, 10);
+        }
+    }
     
     // 重置解码馆体验
     function resetHallExperience() {
