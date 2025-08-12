@@ -144,6 +144,71 @@
             pointer-events: auto !important;
         }
         
+        /* 缩略图显示样式 */
+        .thumbnail-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 90vw;
+            max-height: 80vh;
+            animation: thumbnailFadeIn 0.3s ease-out;
+        }
+        
+        .thumbnail-image {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+        
+        .thumbnail-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+        
+        .thumbnail-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        
+        .thumbnail-close {
+            background: #8B4513;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .thumbnail-close:hover {
+            background: #A0522D;
+        }
+        
+        @keyframes thumbnailFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
 
         
 
@@ -223,6 +288,14 @@
             <!-- 集合的动物图片将在这里显示 -->
         </div>
     </div>
+</div>
+
+<!-- 缩略图显示 -->
+<div id="thumbnailDisplay" class="thumbnail-display" style="display: none;">
+    <img id="thumbnailImage" class="thumbnail-image" src="" alt="文物缩略图">
+    <div id="thumbnailTitle" class="thumbnail-title"></div>
+    <div id="thumbnailDescription" class="thumbnail-description"></div>
+    <button id="closeThumbnailBtn" class="thumbnail-close">关闭</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
@@ -323,7 +396,8 @@
                     "yaw": 45,
                     "type": "info",
                     "text": "玉猪龙",
-                    "clickHandlerFunc": function() { showDragonArtifact('yuzhulong'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('yuzhulong'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('yuzhulong'); }
                 },
                 // 汉代瓦当标签
                 {
@@ -331,7 +405,8 @@
                     "yaw": 90,
                     "type": "info",
                     "text": "汉代瓦当",
-                    "clickHandlerFunc": function() { showDragonArtifact('handai'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('handai'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('handai'); }
                 },
                 // 隋代赵州桥石栏板标签
                 {
@@ -339,31 +414,37 @@
                     "yaw": 135,
                     "type": "info",
                     "text": "隋代赵州桥石栏板",
-                    "clickHandlerFunc": function() { showDragonArtifact('suidai'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('suidai'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('suidai'); }
                 },
                 // 云龙纹葵花镜标签
                 {
-                    "pitch": -12,
-                    "yaw": -45,
+                    "pitch": -18,
+                    "yaw": -135,
+                   
                     "type": "info",
                     "text": "云龙纹葵花镜",
-                    "clickHandlerFunc": function() { showDragonArtifact('tangdai'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('tangdai'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('tangdai'); }
                 },
                 // 元代龙纹高足杯标签
                 {
+              
                     "pitch": -8,
                     "yaw": -90,
                     "type": "info",
                     "text": "元代龙纹高足杯",
-                    "clickHandlerFunc": function() { showDragonArtifact('yuandai'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('yuandai'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('yuandai'); }
                 },
                 // 明清时代的龙标签
                 {
-                    "pitch": -18,
-                    "yaw": -135,
+                    "pitch": -12,
+                    "yaw": -45,
                     "type": "info",
                     "text": "明清时代的龙",
-                    "clickHandlerFunc": function() { showDragonArtifact('mingqing'); }
+                    "clickHandlerFunc": function() { showDragonArtifact('mingqing'); },
+                    "dblClickHandlerFunc": function() { showThumbnail('mingqing'); }
                 }
 
             ]
@@ -374,7 +455,7 @@
             "hotSpots": [
                 {
                     "pitch": 0,
-                    "yaw": 150,
+                    "yaw": 0,
                     "type": "scene",
                     "text": "返回龙博物馆",
                     "sceneId": "museum"
@@ -431,6 +512,32 @@
             }
         }, 10);
     }
+    
+    // 显示缩略图函数
+    function showThumbnail(artifactKey) {
+        const artifact = dragonArtifacts[artifactKey];
+        if (!artifact) return;
+        
+        // 更新缩略图内容
+        document.getElementById('thumbnailImage').src = artifact.images[0]; // 显示第一张图片作为缩略图
+        document.getElementById('thumbnailImage').alt = artifact.title;
+        document.getElementById('thumbnailTitle').textContent = artifact.title;
+        document.getElementById('thumbnailDescription').textContent = artifact.description;
+        
+        // 显示缩略图
+        const thumbnailDisplay = document.getElementById('thumbnailDisplay');
+        thumbnailDisplay.style.display = 'block';
+        
+        // 3秒后自动关闭
+        setTimeout(() => {
+            closeThumbnail();
+        }, 3000);
+    }
+    
+    // 关闭缩略图函数
+    function closeThumbnail() {
+        document.getElementById('thumbnailDisplay').style.display = 'none';
+    }
 
     // 关闭模态框
     document.querySelector('.close').onclick = function() {
@@ -441,6 +548,7 @@
     window.onclick = function(event) {
         const dragonModal = document.getElementById('dragonModal');
         const animalModal = document.getElementById('animalModal');
+        const thumbnailDisplay = document.getElementById('thumbnailDisplay');
         
         if (event.target == dragonModal) {
             dragonModal.style.display = 'none';
@@ -448,6 +556,10 @@
         
         if (event.target == animalModal) {
             closeAnimalModal();
+        }
+        
+        if (event.target == thumbnailDisplay) {
+            closeThumbnail();
         }
     }
 
@@ -511,10 +623,29 @@
     const viewer = pannellum.viewer('panorama', {
         "default": {
             "firstScene": "entrance", // 初始场景
-            "author": "你的名字",
+            "author": "实验小学 黄金艳",
             "sceneFadeDuration": 1000
         },
         "scenes": scenes
+    });
+    
+    // 监听热点双击事件
+    viewer.on('hotspotclick', function(hotSpot) {
+        // 检查是否有双击处理函数
+        if (hotSpot.dblClickHandlerFunc) {
+            // 使用定时器检测双击
+            if (!hotSpot.lastClickTime) {
+                hotSpot.lastClickTime = Date.now();
+            } else {
+                const timeDiff = Date.now() - hotSpot.lastClickTime;
+                if (timeDiff < 300) { // 300ms内的两次点击认为是双击
+                    hotSpot.dblClickHandlerFunc();
+                    hotSpot.lastClickTime = 0; // 重置
+                } else {
+                    hotSpot.lastClickTime = Date.now();
+                }
+            }
+        }
     });
     
     // 监听场景切换事件，为博物馆场景添加进入动画
@@ -979,6 +1110,7 @@
     // 绑定按钮事件
     document.getElementById('closeHallBtn').onclick = closeHallImage;
     document.getElementById('resetBtn').onclick = resetHallExperience;
+    document.getElementById('closeThumbnailBtn').onclick = closeThumbnail;
     
     // 重置解码馆体验
     function resetHallExperience() {
