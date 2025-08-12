@@ -13,6 +13,9 @@
             width: 240px !important;
             height: 300px !important;
             object-fit: contain !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
         }
         
         /* 龙文物展示模态框样式 */
@@ -493,6 +496,9 @@
                 width: 160px !important;
                 height: 200px !important;
                 object-fit: contain !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
             }
             
             .museum-yuzhulong {
@@ -742,7 +748,7 @@
                     "sceneId": "entrance"
                 },
                 {
-                    "pitch": -10,
+                    "pitch": 0,
                     "yaw": 0,
                     "type": "scene",
                     "text": "进入龙解码馆",
@@ -1857,6 +1863,31 @@
             resetMessage.remove();
         }, 3000);
     }
+    
+    // 移除tags图片的边框
+    function removeTagsImageBorder() {
+        const tagsImages = document.querySelectorAll('img[src*="tags/"]');
+        tagsImages.forEach(img => {
+            img.style.border = 'none';
+            img.style.outline = 'none';
+            img.style.boxShadow = 'none';
+            img.removeAttribute('border');
+        });
+    }
+    
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        removeTagsImageBorder();
+        
+        // 监听图片加载完成事件
+        const tagsImages = document.querySelectorAll('img[src*="tags/"]');
+        tagsImages.forEach(img => {
+            img.addEventListener('load', removeTagsImageBorder);
+        });
+    });
+    
+    // 定期检查并移除tags图片边框
+    setInterval(removeTagsImageBorder, 1000);
 </script>
 </body>
 </html>
