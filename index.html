@@ -338,8 +338,8 @@
         :-moz-full-screen .museum-yuzhulong {
             z-index: 2147483647 !important;
             position: fixed !important;
-            top: 20% !important;
-            right: 10% !important;
+            top: 35% !important;
+            left: 2% !important;
             pointer-events: auto !important;
         }
         
@@ -349,8 +349,8 @@
         .pannellum-container:-moz-full-screen .museum-yuzhulong {
             z-index: 2147483647 !important;
             position: fixed !important;
-            top: 20% !important;
-            left: 10% !important;
+            top: 35% !important;
+            left: 2% !important;
             pointer-events: auto !important;
         }
         
@@ -477,6 +477,42 @@
             z-index: 2147483647 !important;
             position: fixed !important;
             pointer-events: auto !important;
+        }
+        
+        /* 全屏模式下的具体位置设置 */
+        :fullscreen .museum-handai,
+        :-webkit-full-screen .museum-handai,
+        :-moz-full-screen .museum-handai {
+            top: 15% !important;
+            left: 17% !important;
+        }
+        
+        :fullscreen .museum-suidai,
+        :-webkit-full-screen .museum-suidai,
+        :-moz-full-screen .museum-suidai {
+            top: 35% !important;
+            left: 32% !important;
+        }
+        
+        :fullscreen .museum-tangdai,
+        :-webkit-full-screen .museum-tangdai,
+        :-moz-full-screen .museum-tangdai {
+            top: 15% !important;
+            right: 17% !important;
+        }
+        
+        :fullscreen .museum-yuandai,
+        :-webkit-full-screen .museum-yuandai,
+        :-moz-full-screen .museum-yuandai {
+            top: 35% !important;
+            right: 32% !important;
+        }
+        
+        :fullscreen .museum-mingqing,
+        :-webkit-full-screen .museum-mingqing,
+        :-moz-full-screen .museum-mingqing {
+            top: 35% !important;
+            right: 2% !important;
         }
         
         /* 响应式设计 */
@@ -1059,7 +1095,7 @@
             if (isFullscreen) {
                 museumYuzhulong.style.zIndex = '2147483647';
                 museumYuzhulong.style.position = 'fixed';
-                museumYuzhulong.style.top = '20%';
+                museumYuzhulong.style.top = '35%';
                 museumYuzhulong.style.left = '2%';
                 museumYuzhulong.style.pointerEvents = 'auto';
                 
@@ -1888,6 +1924,72 @@
     
     // 定期检查并移除tags图片边框
     setInterval(removeTagsImageBorder, 1000);
+    
+    // 修复全屏模式下图片位置
+    function fixFullscreenImagePositions() {
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        const currentScene = viewer.getScene();
+        
+        if (isFullscreen && currentScene === 'museum') {
+            const museumYuzhulong = document.getElementById('museumYuzhulong');
+            const museumHandai = document.getElementById('museumHandai');
+            const museumSuidai = document.getElementById('museumSuidai');
+            const museumTangdai = document.getElementById('museumTangdai');
+            const museumYuandai = document.getElementById('museumYuandai');
+            const museumMingqing = document.getElementById('museumMingqing');
+            
+            // 设置正确的位置
+            if (museumYuzhulong && museumYuzhulong.style.display !== 'none') {
+                museumYuzhulong.style.position = 'fixed';
+                museumYuzhulong.style.top = '35%';
+                museumYuzhulong.style.left = '2%';
+                museumYuzhulong.style.zIndex = '2147483647';
+            }
+            
+            if (museumHandai && museumHandai.style.display !== 'none') {
+                museumHandai.style.position = 'fixed';
+                museumHandai.style.top = '15%';
+                museumHandai.style.left = '17%';
+                museumHandai.style.zIndex = '2147483647';
+            }
+            
+            if (museumSuidai && museumSuidai.style.display !== 'none') {
+                museumSuidai.style.position = 'fixed';
+                museumSuidai.style.top = '35%';
+                museumSuidai.style.left = '32%';
+                museumSuidai.style.zIndex = '2147483647';
+            }
+            
+            if (museumTangdai && museumTangdai.style.display !== 'none') {
+                museumTangdai.style.position = 'fixed';
+                museumTangdai.style.top = '15%';
+                museumTangdai.style.right = '17%';
+                museumTangdai.style.zIndex = '2147483647';
+            }
+            
+            if (museumYuandai && museumYuandai.style.display !== 'none') {
+                museumYuandai.style.position = 'fixed';
+                museumYuandai.style.top = '35%';
+                museumYuandai.style.right = '32%';
+                museumYuandai.style.zIndex = '2147483647';
+            }
+            
+            if (museumMingqing && museumMingqing.style.display !== 'none') {
+                museumMingqing.style.position = 'fixed';
+                museumMingqing.style.top = '35%';
+                museumMingqing.style.right = '2%';
+                museumMingqing.style.zIndex = '2147483647';
+            }
+        }
+    }
+    
+    // 监听全屏状态变化
+    document.addEventListener('fullscreenchange', fixFullscreenImagePositions);
+    document.addEventListener('webkitfullscreenchange', fixFullscreenImagePositions);
+    document.addEventListener('mozfullscreenchange', fixFullscreenImagePositions);
+    
+    // 定期检查全屏模式下的图片位置
+    setInterval(fixFullscreenImagePositions, 2000);
 </script>
 </body>
 </html>
