@@ -316,11 +316,6 @@
             width: 200px;
             height: 250px;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            border: 3px solid #8B4513;
             animation: museumYuzhulongFloat 3s ease-in-out infinite;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -328,29 +323,12 @@
         
         .museum-yuzhulong:hover {
             transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
         }
         
         .museum-yuzhulong img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 10px;
-        }
-        
-        .museum-yuzhulong-title {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(139, 69, 19, 0.9);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
         @keyframes museumYuzhulongFloat {
@@ -392,7 +370,6 @@
 <!-- 博物馆场景中嵌入的玉猪龙 -->
 <div id="museumYuzhulong" class="museum-yuzhulong" style="display: none;" onclick="showDragonArtifact('yuzhulong')">
     <img src="images/2.museum/玉猪龙.png" alt="玉猪龙">
-    <div class="museum-yuzhulong-title">玉猪龙</div>
 </div>
 
 <!-- 龙文物展示模态框 -->
