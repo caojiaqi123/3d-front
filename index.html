@@ -243,6 +243,140 @@
             }
         }
         
+        /* 玉猪龙图片展示样式 */
+        .yuzhulong-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2147483647 !important;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 90vw;
+            max-height: 80vh;
+            animation: yuzhulongFadeIn 0.5s ease-out;
+        }
+        
+        .yuzhulong-image {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .yuzhulong-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 15px;
+        }
+        
+        .yuzhulong-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .yuzhulong-close {
+            background: #8B4513;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .yuzhulong-close:hover {
+            background: #A0522D;
+        }
+        
+        @keyframes yuzhulongFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.7) rotate(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+        
+        /* 博物馆场景中嵌入的玉猪龙图片样式 */
+        .museum-yuzhulong {
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 200px;
+            height: 250px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 3px solid #8B4513;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .museum-yuzhulong:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+        
+        .museum-yuzhulong img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        .museum-yuzhulong-title {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(139, 69, 19, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes museumYuzhulongFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .museum-yuzhulong {
+                width: 150px;
+                height: 180px;
+                top: 15%;
+                right: 5%;
+            }
+            
+            .museum-yuzhulong-title {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+        
 
         
 
@@ -254,6 +388,12 @@
 </head>
 <body>
 <div id="panorama"></div>
+
+<!-- 博物馆场景中嵌入的玉猪龙 -->
+<div id="museumYuzhulong" class="museum-yuzhulong" style="display: none;" onclick="showYuzhulongImage()">
+    <img src="images/2.museum/玉猪龙.png" alt="玉猪龙">
+    <div class="museum-yuzhulong-title">玉猪龙</div>
+</div>
 
 <!-- 龙文物展示模态框 -->
 <div id="dragonModal" class="dragon-modal">
@@ -333,6 +473,14 @@
     <div id="thumbnailTitle" class="thumbnail-title"></div>
     <div id="thumbnailDescription" class="thumbnail-description"></div>
     <button id="closeThumbnailBtn" class="thumbnail-close">关闭</button>
+</div>
+
+<!-- 玉猪龙图片显示 -->
+<div id="yuzhulongDisplay" class="yuzhulong-display" style="display: none;">
+    <img id="yuzhulongImage" class="yuzhulong-image" src="images/2.museum/玉猪龙.png" alt="玉猪龙">
+    <div class="yuzhulong-title">玉猪龙</div>
+    <div class="yuzhulong-description">新石器时代红山文化玉器，是中国最早的龙形玉器之一，具有重要的历史和文化价值。</div>
+    <button id="closeYuzhulongBtn" class="yuzhulong-close">关闭</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
@@ -574,6 +722,39 @@
         }, 50);
     }
     
+    // 显示玉猪龙图片函数
+    function showYuzhulongImage() {
+        const yuzhulongDisplay = document.getElementById('yuzhulongDisplay');
+        
+        // 确保玉猪龙显示在body的最顶层
+        if (yuzhulongDisplay.parentNode !== document.body) {
+            document.body.appendChild(yuzhulongDisplay);
+        }
+        
+        yuzhulongDisplay.style.display = 'block';
+        yuzhulongDisplay.style.zIndex = '2147483647';
+        
+        // 检查是否在全屏模式
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        if (isFullscreen) {
+            yuzhulongDisplay.style.zIndex = '2147483647';
+        }
+        
+        // 强制刷新显示
+        setTimeout(() => {
+            yuzhulongDisplay.style.display = 'none';
+            yuzhulongDisplay.offsetHeight; // 触发重排
+            yuzhulongDisplay.style.display = 'block';
+            yuzhulongDisplay.style.zIndex = '2147483647';
+            console.log('玉猪龙显示，z-index:', yuzhulongDisplay.style.zIndex, '全屏模式:', isFullscreen);
+        }, 10);
+    }
+    
+    // 关闭玉猪龙图片显示
+    function closeYuzhulongImage() {
+        document.getElementById('yuzhulongDisplay').style.display = 'none';
+    }
+    
     // 显示缩略图函数
     function showThumbnail(artifactKey) {
         const artifact = dragonArtifacts[artifactKey];
@@ -632,6 +813,7 @@
         const dragonModal = document.getElementById('dragonModal');
         const animalModal = document.getElementById('animalModal');
         const thumbnailDisplay = document.getElementById('thumbnailDisplay');
+        const yuzhulongDisplay = document.getElementById('yuzhulongDisplay');
         
         if (event.target == dragonModal) {
             dragonModal.style.display = 'none';
@@ -643,6 +825,10 @@
         
         if (event.target == thumbnailDisplay) {
             closeThumbnail();
+        }
+        
+        if (event.target == yuzhulongDisplay) {
+            closeYuzhulongImage();
         }
     }
 
@@ -734,6 +920,10 @@
         // 监听场景切换事件，为博物馆场景添加进入动画
     viewer.on('scenechange', function(sceneId) {
         if (sceneId === 'museum') {
+            // 显示嵌入的玉猪龙图片
+            const museumYuzhulong = document.getElementById('museumYuzhulong');
+            museumYuzhulong.style.display = 'block';
+            
             // 延迟执行进入动画，确保场景加载完成
             setTimeout(function() {
                 // 从远到近的进入效果：设置较远的起始视角
@@ -776,6 +966,10 @@
             setTimeout(function() {
                 showHallImage(0);
             }, 1000);
+        } else {
+            // 其他场景时隐藏玉猪龙图片
+            const museumYuzhulong = document.getElementById('museumYuzhulong');
+            museumYuzhulong.style.display = 'none';
         }
     });
     
@@ -1291,6 +1485,7 @@
     document.getElementById('closeHallBtn').onclick = closeHallImage;
     document.getElementById('resetBtn').onclick = resetHallExperience;
     document.getElementById('closeThumbnailBtn').onclick = closeThumbnail;
+    document.getElementById('closeYuzhulongBtn').onclick = closeYuzhulongImage;
     
     // 重置解码馆体验
     function resetHallExperience() {
