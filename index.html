@@ -32,13 +32,35 @@
             height: 100vh !important;
         }
         
+        /* 全屏模式下的解码馆图片展示样式 */
+        :fullscreen .hall-image-display,
+        :-webkit-full-screen .hall-image-display,
+        :-moz-full-screen .hall-image-display {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        
+        /* 全屏模式下的缩略图显示样式 */
+        :fullscreen .thumbnail-display,
+        :-webkit-full-screen .thumbnail-display,
+        :-moz-full-screen .thumbnail-display {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        
         /* 解码馆图片展示样式 */
         .hall-image-display {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 99999;
+            z-index: 2147483647 !important;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
             padding: 20px;
@@ -162,7 +184,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 99999;
+            z-index: 2147483647 !important;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 20px;
@@ -565,7 +587,29 @@
         
         // 显示缩略图
         const thumbnailDisplay = document.getElementById('thumbnailDisplay');
+        
+        // 确保缩略图在body的最顶层
+        if (thumbnailDisplay.parentNode !== document.body) {
+            document.body.appendChild(thumbnailDisplay);
+        }
+        
         thumbnailDisplay.style.display = 'block';
+        thumbnailDisplay.style.zIndex = '2147483647';
+        
+        // 检查是否在全屏模式
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        if (isFullscreen) {
+            thumbnailDisplay.style.zIndex = '2147483647';
+        }
+        
+        // 强制刷新显示
+        setTimeout(() => {
+            thumbnailDisplay.style.display = 'none';
+            thumbnailDisplay.offsetHeight; // 触发重排
+            thumbnailDisplay.style.display = 'block';
+            thumbnailDisplay.style.zIndex = '2147483647';
+            console.log('缩略图显示，z-index:', thumbnailDisplay.style.zIndex, '全屏模式:', isFullscreen);
+        }, 10);
         
         // 3秒后自动关闭
         setTimeout(() => {
@@ -742,8 +786,29 @@
             const imageDisplay = document.getElementById('hallImageDisplay');
             const currentImage = document.getElementById('hallCurrentImage');
             
+            // 确保图片展示在body的最顶层
+            if (imageDisplay.parentNode !== document.body) {
+                document.body.appendChild(imageDisplay);
+            }
+            
             currentImage.src = hallImages[index];
             imageDisplay.style.display = 'block';
+            imageDisplay.style.zIndex = '2147483647';
+            
+            // 检查是否在全屏模式
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+            if (isFullscreen) {
+                imageDisplay.style.zIndex = '2147483647';
+            }
+            
+            // 强制刷新显示
+            setTimeout(() => {
+                imageDisplay.style.display = 'none';
+                imageDisplay.offsetHeight; // 触发重排
+                imageDisplay.style.display = 'block';
+                imageDisplay.style.zIndex = '2147483647';
+                console.log('解码馆图片显示，z-index:', imageDisplay.style.zIndex, '全屏模式:', isFullscreen);
+            }, 10);
             
             // 绑定龙身体部位热点事件
             bindDragonHotspots();
@@ -793,7 +858,28 @@
         // 存储当前显示的部位信息
         modal.dataset.currentPart = partKey;
         
+        // 确保模态框在body的最顶层
+        if (modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        
         modal.style.display = 'block';
+        modal.style.zIndex = '2147483647';
+        
+        // 检查是否在全屏模式
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        if (isFullscreen) {
+            modal.style.zIndex = '2147483647';
+        }
+        
+        // 强制刷新显示
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.offsetHeight; // 触发重排
+            modal.style.display = 'block';
+            modal.style.zIndex = '2147483647';
+            console.log('动物信息显示，z-index:', modal.style.zIndex, '全屏模式:', isFullscreen);
+        }, 10);
     }
     
     // 检查是否所有部位都已查看
@@ -1118,7 +1204,28 @@
             collectionImages.appendChild(imgContainer);
         });
         
+        // 确保模态框在body的最顶层
+        if (modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        
         modal.style.display = 'block';
+        modal.style.zIndex = '2147483647';
+        
+        // 检查是否在全屏模式
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        if (isFullscreen) {
+            modal.style.zIndex = '2147483647';
+        }
+        
+        // 强制刷新显示
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.offsetHeight; // 触发重排
+            modal.style.display = 'block';
+            modal.style.zIndex = '2147483647';
+            console.log('集合模态框显示，z-index:', modal.style.zIndex, '全屏模式:', isFullscreen);
+        }, 10);
     }
     
     // 关闭集合模态框
