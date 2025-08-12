@@ -8,6 +8,13 @@
         html, body { margin: 0; height: 100%; }
         #panorama { width: 100%; height: 100%; }
         
+        /* tags文件夹下的图片大小控制 */
+        img[src*="tags/"] {
+            width: 240px !important;
+            height: 300px !important;
+            object-fit: contain !important;
+        }
+        
         /* 龙文物展示模态框样式 */
         .dragon-modal {
             display: none;
@@ -479,6 +486,13 @@
             .museum-mingqing {
                 width: 120px;
                 height: 150px;
+            }
+            
+            /* 移动端tags图片大小调整 */
+            img[src*="tags/"] {
+                width: 160px !important;
+                height: 200px !important;
+                object-fit: contain !important;
             }
             
             .museum-yuzhulong {
