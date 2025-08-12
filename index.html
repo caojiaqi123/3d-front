@@ -360,6 +360,11 @@
         "entrance": {
             "title": "龙国",
             "panorama": "images/1.country/DragonCountry.png",
+            "initialViewParameters": {
+                "pitch": -45,  // 俯视角度
+                "yaw": 0,      // 水平角度
+                "fov": 360     // 直接设置为拉远状态
+            },
             "hotSpots": [
                 {
                     "pitch": -25,      // 垂直角度
@@ -651,7 +656,7 @@
         }
     });
     
-    // 监听场景切换事件，为博物馆场景添加进入动画
+        // 监听场景切换事件，为博物馆场景添加进入动画
     viewer.on('scenechange', function(sceneId) {
         if (sceneId === 'museum') {
             // 延迟执行进入动画，确保场景加载完成
