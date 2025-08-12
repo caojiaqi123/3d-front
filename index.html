@@ -212,6 +212,10 @@
 
         
 
+        
+
+        
+
     </style>
 </head>
 <body>
@@ -255,8 +259,7 @@
         <div class="dragon-hotspot" data-part="body" style="position: absolute; top: 43%; left: 7%; width: 100px; height: 100px; cursor: pointer; background: transparent; border: none; display: flex; align-items: center; justify-content: center;"></div>
     </div>
     
-    <!-- 中间集合区域 -->
-    <div id="centerCollection" class="center-collection" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; cursor: pointer; background: transparent; border: none; display: none; align-items: center; justify-content: center; z-index: 1000;"></div>
+
     
     <div class="hall-image-nav">
         <button id="closeHallBtn" class="hall-nav-btn">关闭</button>
@@ -763,21 +766,55 @@
         const viewedCount = viewedParts.size;
         
         if (viewedCount === allParts.length) {
-            // 延迟执行集合动画
-            setTimeout(() => {
+            // 所有部位查看完毕，添加点击图片中部触发集合的功能
+            addCenterClickHandler();
+        }
+    }
+    
+    // 添加点击图片中部触发集合的功能
+    function addCenterClickHandler() {
+        const hallImage = document.getElementById('hallCurrentImage');
+        if (hallImage) {
+            // 移除之前的事件监听器（如果有的话）
+            hallImage.removeEventListener('click', handleCenterClick);
+            // 添加新的事件监听器
+            hallImage.addEventListener('click', handleCenterClick);
+        }
+    }
+    
+    // 处理图片中部点击事件
+    function handleCenterClick(event) {
+        // 检查是否所有部位都已查看
+        const allParts = Object.keys(dragonParts);
+        const viewedCount = viewedParts.size;
+        
+        if (viewedCount === allParts.length) {
+            // 计算点击位置是否在图片中部
+            const rect = event.target.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const clickX = event.clientX;
+            const clickY = event.clientY;
+            
+            // 定义中部区域（图片中心30%的区域）
+            const centerArea = Math.min(rect.width, rect.height) * 0.3;
+            const distanceFromCenter = Math.sqrt(
+                Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2)
+            );
+            
+            if (distanceFromCenter <= centerArea) {
+                // 点击在图片中部，触发集合动画
                 animateCollectionToCenter();
-            }, 1000);
+                
+                // 移除点击事件，避免重复触发
+                event.target.removeEventListener('click', handleCenterClick);
+            }
         }
     }
     
     // 动画集合到中部
     function animateCollectionToCenter() {
         const hotspots = document.querySelectorAll('.dragon-hotspot');
-        const centerCollection = document.getElementById('centerCollection');
-        
-        // 显示中间集合区域
-        centerCollection.style.display = 'flex';
-        centerCollection.innerHTML = '<div style="background: rgba(255, 255, 255, 0.8); border: 2px dashed #8B4513; border-radius: 50%; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #8B4513; font-weight: bold;">集合中...</div>';
         
         // 创建集合容器
         const collectionContainer = document.createElement('div');
@@ -1144,9 +1181,13 @@
             };
         });
         
-        // 隐藏中间集合区域
-        const centerCollection = document.getElementById('centerCollection');
-        centerCollection.style.display = 'none';
+        // 移除图片中部的点击事件
+        const hallImage = document.getElementById('hallCurrentImage');
+        if (hallImage) {
+            hallImage.removeEventListener('click', handleCenterClick);
+        }
+        
+
         
         // 显示重置成功提示
         const resetMessage = document.createElement('div');
