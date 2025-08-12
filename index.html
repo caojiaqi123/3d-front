@@ -363,18 +363,152 @@
             }
         }
         
+        /* 其他龙文物嵌入样式 - 按历史时间顺序排列 */
+        .museum-handai {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 180px;
+            height: 220px;
+            z-index: 2147483647 !important;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        .museum-suidai {
+            position: absolute;
+            top: 15%;
+            left: 35%;
+            width: 160px;
+            height: 200px;
+            z-index: 2147483647 !important;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        .museum-tangdai {
+            position: absolute;
+            top: 25%;
+            left: 60%;
+            width: 170px;
+            height: 210px;
+            z-index: 2147483647 !important;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        .museum-yuandai {
+            position: absolute;
+            top: 35%;
+            right: 25%;
+            width: 150px;
+            height: 190px;
+            z-index: 2147483647 !important;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        .museum-mingqing {
+            position: absolute;
+            top: 45%;
+            right: 5%;
+            width: 190px;
+            height: 240px;
+            z-index: 2147483647 !important;
+            animation: museumYuzhulongFloat 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        /* 所有龙文物图片的通用样式 */
+        .museum-handai img,
+        .museum-suidai img,
+        .museum-tangdai img,
+        .museum-yuandai img,
+        .museum-mingqing img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .museum-handai:hover,
+        .museum-suidai:hover,
+        .museum-tangdai:hover,
+        .museum-yuandai:hover,
+        .museum-mingqing:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 全屏模式下的其他龙文物样式 */
+        :fullscreen .museum-handai,
+        :fullscreen .museum-suidai,
+        :fullscreen .museum-tangdai,
+        :fullscreen .museum-yuandai,
+        :fullscreen .museum-mingqing,
+        :-webkit-full-screen .museum-handai,
+        :-webkit-full-screen .museum-suidai,
+        :-webkit-full-screen .museum-tangdai,
+        :-webkit-full-screen .museum-yuandai,
+        :-webkit-full-screen .museum-mingqing,
+        :-moz-full-screen .museum-handai,
+        :-moz-full-screen .museum-suidai,
+        :-moz-full-screen .museum-tangdai,
+        :-moz-full-screen .museum-yuandai,
+        :-moz-full-screen .museum-mingqing {
+            z-index: 2147483647 !important;
+            position: fixed !important;
+            pointer-events: auto !important;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
+            .museum-yuzhulong,
+            .museum-handai,
+            .museum-suidai,
+            .museum-tangdai,
+            .museum-yuandai,
+            .museum-mingqing {
+                width: 120px;
+                height: 150px;
+            }
+            
             .museum-yuzhulong {
-                width: 150px;
-                height: 180px;
                 top: 15%;
                 right: 5%;
             }
             
-            .museum-yuzhulong-title {
-                font-size: 12px;
-                padding: 6px 12px;
+            .museum-handai {
+                top: 15%;
+                left: 8%;
+            }
+            
+            .museum-suidai {
+                top: 10%;
+                left: 30%;
+            }
+            
+            .museum-tangdai {
+                top: 20%;
+                left: 55%;
+            }
+            
+            .museum-yuandai {
+                top: 30%;
+                right: 20%;
+            }
+            
+            .museum-mingqing {
+                top: 40%;
+                right: 3%;
             }
         }
         
@@ -390,9 +524,29 @@
 <body>
 <div id="panorama"></div>
 
-<!-- 博物馆场景中嵌入的玉猪龙 -->
+<!-- 博物馆场景中嵌入的龙文物 -->
 <div id="museumYuzhulong" class="museum-yuzhulong" style="display: none;" onclick="showDragonArtifact('yuzhulong')">
-    <img src="images/2.museum/玉猪龙.png" alt="玉猪龙">
+    <img src="images/2.museum/tags/玉猪龙.png" alt="玉猪龙">
+</div>
+
+<div id="museumHandai" class="museum-handai" style="display: none;" onclick="showDragonArtifact('handai')">
+    <img src="images/2.museum/tags/汉代瓦当.png" alt="汉代瓦当">
+</div>
+
+<div id="museumSuidai" class="museum-suidai" style="display: none;" onclick="showDragonArtifact('suidai')">
+    <img src="images/2.museum/tags/隋代赵州桥石栏板.png" alt="隋代赵州桥石栏板">
+</div>
+
+<div id="museumTangdai" class="museum-tangdai" style="display: none;" onclick="showDragonArtifact('tangdai')">
+    <img src="images/2.museum/tags/云龙纹葵花镜.png" alt="云龙纹葵花镜">
+</div>
+
+<div id="museumYuandai" class="museum-yuandai" style="display: none;" onclick="showDragonArtifact('yuandai')">
+    <img src="images/2.museum/tags/元代龙纹高足杯.png" alt="元代龙纹高足杯">
+</div>
+
+<div id="museumMingqing" class="museum-mingqing" style="display: none;" onclick="showDragonArtifact('mingqing')">
+    <img src="images/2.museum/tags/明清时代的龙.png" alt="明清时代的龙">
 </div>
 
 <!-- 龙文物展示模态框 -->
@@ -580,53 +734,7 @@
                     "text": "进入龙解码馆",
                     "sceneId": "hall"
                 },
-                // 汉代瓦当标签
-                {
-                    "pitch": -10,
-                    "yaw": 90,
-                    "type": "info",
-                    "text": "汉代瓦当",
-                    "clickHandlerFunc": function() { showDragonArtifact('handai'); },
-                    "dblClickHandlerFunc": function() { showThumbnail('handai'); }
-                },
-                // 隋代赵州桥石栏板标签
-                {
-                    "pitch": -5,
-                    "yaw": 135,
-                    "type": "info",
-                    "text": "隋代赵州桥石栏板",
-                    "clickHandlerFunc": function() { showDragonArtifact('suidai'); },
-                    "dblClickHandlerFunc": function() { showThumbnail('suidai'); }
-                },
-                // 云龙纹葵花镜标签
-                {
-                    "pitch": -18,
-                    "yaw": -135,
-                   
-                    "type": "info",
-                    "text": "云龙纹葵花镜",
-                    "clickHandlerFunc": function() { showDragonArtifact('tangdai'); },
-                    "dblClickHandlerFunc": function() { showThumbnail('tangdai'); }
-                },
-                // 元代龙纹高足杯标签
-                {
-              
-                    "pitch": -8,
-                    "yaw": -90,
-                    "type": "info",
-                    "text": "元代龙纹高足杯",
-                    "clickHandlerFunc": function() { showDragonArtifact('yuandai'); },
-                    "dblClickHandlerFunc": function() { showThumbnail('yuandai'); }
-                },
-                // 明清时代的龙标签
-                {
-                    "pitch": -12,
-                    "yaw": -45,
-                    "type": "info",
-                    "text": "明清时代的龙",
-                    "clickHandlerFunc": function() { showDragonArtifact('mingqing'); },
-                    "dblClickHandlerFunc": function() { showThumbnail('mingqing'); }
-                }
+
 
             ]
         },
@@ -911,9 +1019,20 @@
         // 监听场景切换事件，为博物馆场景添加进入动画
     viewer.on('scenechange', function(sceneId) {
         if (sceneId === 'museum') {
-            // 显示嵌入的玉猪龙图片
+            // 显示所有嵌入的龙文物图片
             const museumYuzhulong = document.getElementById('museumYuzhulong');
+            const museumHandai = document.getElementById('museumHandai');
+            const museumSuidai = document.getElementById('museumSuidai');
+            const museumTangdai = document.getElementById('museumTangdai');
+            const museumYuandai = document.getElementById('museumYuandai');
+            const museumMingqing = document.getElementById('museumMingqing');
+            
             museumYuzhulong.style.display = 'block';
+            museumHandai.style.display = 'block';
+            museumSuidai.style.display = 'block';
+            museumTangdai.style.display = 'block';
+            museumYuandai.style.display = 'block';
+            museumMingqing.style.display = 'block';
             
             // 确保在全屏模式下也能显示
             const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
@@ -923,6 +1042,36 @@
                 museumYuzhulong.style.top = '20%';
                 museumYuzhulong.style.right = '10%';
                 museumYuzhulong.style.pointerEvents = 'auto';
+                
+                museumHandai.style.zIndex = '2147483647';
+                museumHandai.style.position = 'fixed';
+                museumHandai.style.top = '20%';
+                museumHandai.style.left = '10%';
+                museumHandai.style.pointerEvents = 'auto';
+                
+                museumSuidai.style.zIndex = '2147483647';
+                museumSuidai.style.position = 'fixed';
+                museumSuidai.style.top = '15%';
+                museumSuidai.style.left = '35%';
+                museumSuidai.style.pointerEvents = 'auto';
+                
+                museumTangdai.style.zIndex = '2147483647';
+                museumTangdai.style.position = 'fixed';
+                museumTangdai.style.top = '25%';
+                museumTangdai.style.left = '60%';
+                museumTangdai.style.pointerEvents = 'auto';
+                
+                museumYuandai.style.zIndex = '2147483647';
+                museumYuandai.style.position = 'fixed';
+                museumYuandai.style.top = '35%';
+                museumYuandai.style.right = '25%';
+                museumYuandai.style.pointerEvents = 'auto';
+                
+                museumMingqing.style.zIndex = '2147483647';
+                museumMingqing.style.position = 'fixed';
+                museumMingqing.style.top = '45%';
+                museumMingqing.style.right = '5%';
+                museumMingqing.style.pointerEvents = 'auto';
             }
             
             // 延迟执行进入动画，确保场景加载完成
@@ -963,18 +1112,40 @@
                 }, 6000);
             }, 500);
         } else if (sceneId === 'hall') {
-            // 进入解码馆时隐藏玉猪龙图片
+            // 进入解码馆时隐藏所有龙文物图片
             const museumYuzhulong = document.getElementById('museumYuzhulong');
+            const museumHandai = document.getElementById('museumHandai');
+            const museumSuidai = document.getElementById('museumSuidai');
+            const museumTangdai = document.getElementById('museumTangdai');
+            const museumYuandai = document.getElementById('museumYuandai');
+            const museumMingqing = document.getElementById('museumMingqing');
+            
             museumYuzhulong.style.display = 'none';
+            museumHandai.style.display = 'none';
+            museumSuidai.style.display = 'none';
+            museumTangdai.style.display = 'none';
+            museumYuandai.style.display = 'none';
+            museumMingqing.style.display = 'none';
             
             // 进入解码馆时自动显示图片1
             setTimeout(function() {
                 showHallImage(0);
             }, 1000);
         } else {
-            // 其他场景时隐藏玉猪龙图片
+            // 其他场景时隐藏所有龙文物图片
             const museumYuzhulong = document.getElementById('museumYuzhulong');
+            const museumHandai = document.getElementById('museumHandai');
+            const museumSuidai = document.getElementById('museumSuidai');
+            const museumTangdai = document.getElementById('museumTangdai');
+            const museumYuandai = document.getElementById('museumYuandai');
+            const museumMingqing = document.getElementById('museumMingqing');
+            
             museumYuzhulong.style.display = 'none';
+            museumHandai.style.display = 'none';
+            museumSuidai.style.display = 'none';
+            museumTangdai.style.display = 'none';
+            museumYuandai.style.display = 'none';
+            museumMingqing.style.display = 'none';
         }
     });
     
@@ -1497,49 +1668,116 @@
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
     
-    // 定期检查玉猪龙图片是否可见（在全屏模式下）
+    // 定期检查所有龙文物图片是否可见（在全屏模式下）
     setInterval(function() {
         const museumYuzhulong = document.getElementById('museumYuzhulong');
+        const museumHandai = document.getElementById('museumHandai');
+        const museumSuidai = document.getElementById('museumSuidai');
+        const museumTangdai = document.getElementById('museumTangdai');
+        const museumYuandai = document.getElementById('museumYuandai');
+        const museumMingqing = document.getElementById('museumMingqing');
         const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
         const currentScene = viewer.getScene();
         
-        // 只在博物馆场景且全屏模式下显示玉猪龙图片
-        if (isFullscreen && currentScene === 'museum' && museumYuzhulong.style.display !== 'none') {
-            // 确保在全屏模式下可见
-            museumYuzhulong.style.zIndex = '2147483647';
-            museumYuzhulong.style.position = 'fixed';
-            museumYuzhulong.style.top = '20%';
-            museumYuzhulong.style.right = '10%';
-            museumYuzhulong.style.pointerEvents = 'auto';
+        // 只在博物馆场景且全屏模式下显示所有龙文物图片
+        if (isFullscreen && currentScene === 'museum') {
+            // 确保所有龙文物在全屏模式下可见
+            if (museumYuzhulong.style.display !== 'none') {
+                museumYuzhulong.style.zIndex = '2147483647';
+                museumYuzhulong.style.position = 'fixed';
+                museumYuzhulong.style.top = '20%';
+                museumYuzhulong.style.right = '10%';
+                museumYuzhulong.style.pointerEvents = 'auto';
+            }
+            
+            if (museumHandai.style.display !== 'none') {
+                museumHandai.style.zIndex = '2147483647';
+                museumHandai.style.position = 'fixed';
+                museumHandai.style.top = '20%';
+                museumHandai.style.left = '10%';
+                museumHandai.style.pointerEvents = 'auto';
+            }
+            
+            if (museumSuidai.style.display !== 'none') {
+                museumSuidai.style.zIndex = '2147483647';
+                museumSuidai.style.position = 'fixed';
+                museumSuidai.style.top = '15%';
+                museumSuidai.style.left = '35%';
+                museumSuidai.style.pointerEvents = 'auto';
+            }
+            
+            if (museumTangdai.style.display !== 'none') {
+                museumTangdai.style.zIndex = '2147483647';
+                museumTangdai.style.position = 'fixed';
+                museumTangdai.style.top = '25%';
+                museumTangdai.style.left = '60%';
+                museumTangdai.style.pointerEvents = 'auto';
+            }
+            
+            if (museumYuandai.style.display !== 'none') {
+                museumYuandai.style.zIndex = '2147483647';
+                museumYuandai.style.position = 'fixed';
+                museumYuandai.style.top = '35%';
+                museumYuandai.style.right = '25%';
+                museumYuandai.style.pointerEvents = 'auto';
+            }
+            
+            if (museumMingqing.style.display !== 'none') {
+                museumMingqing.style.zIndex = '2147483647';
+                museumMingqing.style.position = 'fixed';
+                museumMingqing.style.top = '45%';
+                museumMingqing.style.right = '5%';
+                museumMingqing.style.pointerEvents = 'auto';
+            }
         }
     }, 1000); // 每秒检查一次
     
     // 处理全屏状态变化
     function handleFullscreenChange() {
         const museumYuzhulong = document.getElementById('museumYuzhulong');
+        const museumHandai = document.getElementById('museumHandai');
+        const museumSuidai = document.getElementById('museumSuidai');
+        const museumTangdai = document.getElementById('museumTangdai');
+        const museumYuandai = document.getElementById('museumYuandai');
+        const museumMingqing = document.getElementById('museumMingqing');
         const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
         const currentScene = viewer.getScene();
         
-        // 只在博物馆场景且全屏模式下显示玉猪龙图片
-        if (isFullscreen && currentScene === 'museum' && museumYuzhulong.style.display !== 'none') {
-            // 全屏时确保玉猪龙图片可见
-            museumYuzhulong.style.zIndex = '2147483647';
-            museumYuzhulong.style.position = 'fixed';
-            museumYuzhulong.style.top = '20%';
-            museumYuzhulong.style.right = '10%';
-            museumYuzhulong.style.pointerEvents = 'auto';
+        // 只在博物馆场景且全屏模式下显示所有龙文物图片
+        if (isFullscreen && currentScene === 'museum') {
+            const allArtifacts = [museumYuzhulong, museumHandai, museumSuidai, museumTangdai, museumYuandai, museumMingqing];
+            const positions = [
+                { top: '20%', right: '10%' },  // 玉猪龙
+                { top: '20%', left: '10%' },   // 汉代瓦当
+                { top: '15%', left: '35%' },   // 隋代
+                { top: '25%', left: '60%' },   // 云龙纹葵花镜
+                { top: '35%', right: '25%' },  // 元代龙纹高足杯
+                { top: '45%', right: '5%' }    // 明清
+            ];
             
-            // 强制刷新显示
-            setTimeout(() => {
-                museumYuzhulong.style.display = 'none';
-                museumYuzhulong.offsetHeight; // 触发重排
-                museumYuzhulong.style.display = 'block';
-                museumYuzhulong.style.zIndex = '2147483647';
-                museumYuzhulong.style.position = 'fixed';
-                museumYuzhulong.style.top = '20%';
-                museumYuzhulong.style.right = '10%';
-                museumYuzhulong.style.pointerEvents = 'auto';
-            }, 10);
+            allArtifacts.forEach((artifact, index) => {
+                if (artifact.style.display !== 'none') {
+                    artifact.style.zIndex = '2147483647';
+                    artifact.style.position = 'fixed';
+                    artifact.style.top = positions[index].top;
+                    if (positions[index].left) artifact.style.left = positions[index].left;
+                    if (positions[index].right) artifact.style.right = positions[index].right;
+                    artifact.style.pointerEvents = 'auto';
+                    
+                    // 强制刷新显示
+                    setTimeout(() => {
+                        artifact.style.display = 'none';
+                        artifact.offsetHeight; // 触发重排
+                        artifact.style.display = 'block';
+                        artifact.style.zIndex = '2147483647';
+                        artifact.style.position = 'fixed';
+                        artifact.style.top = positions[index].top;
+                        if (positions[index].left) artifact.style.left = positions[index].left;
+                        if (positions[index].right) artifact.style.right = positions[index].right;
+                        artifact.style.pointerEvents = 'auto';
+                    }, 10);
+                }
+            });
         }
     }
     
