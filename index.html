@@ -641,6 +641,9 @@
         
         <!-- 身 - 蛇 -->
         <div class="dragon-hotspot" data-part="body" style="position: absolute; top: 43%; left: 7%; width: 100px; height: 100px; cursor: pointer; background: transparent; border: none; display: flex; align-items: center; justify-content: center;"></div>
+        
+        <!-- 嘴 - 鳄鱼 -->
+        <div class="dragon-hotspot" data-part="mouth" style="position: absolute; top: 13%; left: 85%; width: 100px; height: 100px; cursor: pointer; background: transparent; border: none; display: flex; align-items: center; justify-content: center;"></div>
     </div>
     
 
@@ -1035,6 +1038,12 @@
             animal: "蛇",
             image: "images/3.Hall/蛇.png",
             description: "龙的身体来源于蛇的身体"
+        },
+        "mouth": {
+            name: "嘴",
+            animal: "鳄鱼",
+            image: "images/3.Hall/鳄鱼.png",
+            description: "龙的嘴巴来源于鳄鱼的嘴巴"
         }
     };
     
@@ -1047,7 +1056,6 @@
     const viewer = pannellum.viewer('panorama', {
         "default": {
             "firstScene": "entrance", // 初始场景
-            "author": "实验小学 黄金艳",
             "sceneFadeDuration": 1000
         },
         "scenes": scenes
